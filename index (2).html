@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مرجع الطقس والمواقيت الشامل</title>
+    <!-- Google Fonts & Font Awesome للشارات والأيقونات -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-bg: #111827;
+            --card-bg: #1f2937;
+            --accent-color: #3b82f6;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-index: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            display: grid;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #374151;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #374151;
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent-color);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-item .label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .info-item .value {
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+
+        /* بوصلة القبلة */
+        .compass-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        .compass {
+            width: 150px;
+            height: 150px;
+            border: 5px solid var(--accent-color);
+            border-radius: 50%;
+            position: relative;
+            transition: transform 0.2s ease-out;
+            margin-bottom: 15px;
+        }
+
+        .compass::after {
+            content: 'N';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            color: #ef4444;
+        }
+
+        .qibla-pointer {
+            width: 4px;
+            height: 70px;
+            background-color: #eab308;
+            position: absolute;
+            top: 5px;
+            left: 54px;
+            transform-origin: bottom center;
+            transition: transform 0.5s ease;
+        }
+
+        .qibla-pointer::before {
+            content: '🕋';
+            position: absolute;
+            top: -20px;
+            left: -10px;
+            font-size: 1.2rem;
+        }
+
+        /* حالة التحميل */
+        #loader {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 25px 0 10px 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid #1f2937;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>المستكشف الجغرافي الراصد</h1>
+        <p>المرجع الشامل للهواة ومحبي الطقس</p>
+    </header>
+
+    <div id="loader">
+        <i class="fas fa-spinner fa-spin fa-2x" style="color: var(--accent-color); margin-bottom: 10px;"></i>
+        <p>جاري تحديد موقعك وجلب البيانات الجوية والشرعية...</p>
+    </div>
+
+    <div class="container hidden" id="main-content">
+        
+        <!-- بطاقة الموقع الجغرافي -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-map-marker-alt"></i> تفاصيل الموقع الحالي</div>
+            <div class="info-grid">
+                <div class="info-item"><span class="label">المنطقة / المدينة</span><span class="value" id="loc-name">جاري الجلب...</span></div>
+                <div class="info-item"><span class="label">الارتفاع عن سطح البحر</span><span class="value" id="altitude">0 م</span></div>
+                <div class="info-item"><span class="label">خط العرض</span><span class="value" id="lat">-</span></div>
+                <div class="info-item"><span class="label">خط الطول</span><span class="value" id="lon">-</span></div>
+            </div>
+        </div>
+
+        <!-- بطاقة الطقس والمناخ -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-cloud-sun"></i> الطقس والمناخ الحالي</div>
+            <div class="info-grid">
+                <div class="info-item"><span class="label">درجة الحرارة</span><span class="value" id="temp">-</span></div>
+                <div class="info-item"><span class="label">الرطوبة النسبية</span><span class="value" id="humidity">-</span></div>
+                <div class="info-item"><span class="label">سرعة الرياح</span><span class="value" id="wind-speed">-</span></div>
+                <div class="info-item"><span class="label">احتمالية الأمطار اليوم</span><span class="value" id="rain-prob">-</span></div>
+            </div>
+        </div>
+
+        <!-- بطاقة اتجاه القبلة والبوصلة -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-compass"></i> اتجاه القبلة والبوصلة</div>
+            <div class="compass-container">
+                <div class="compass" id="compassRing">
+                    <div class="qibla-pointer" id="qiblaArrow"></div>
+                </div>
+                <p id="qibla-text" style="font-size: 0.95rem; text-align: center;"></p>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px; text-align: center;">
+                    *ملاحظة: يتطلب تشغيل المستشعرات في الجوال لعمل البوصلة الحية.
+                </p>
+            </div>
+        </div>
+
+        <!-- بطاقة مواقيت الصلاة -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-clock"></i> مواقيت الصلاة اليوم</div>
+            <div class="info-grid">
+                <div class="info-item"><span class="label">الفجر</span><span class="value" id="fajr">-</span></div>
+                <div class="info-item"><span class="label">الظهر</span><span class="value" id="dhuhr">-</span></div>
+                <div class="info-item"><span class="label">العصر</span><span class="value" id="asr">-</span></div>
+                <div class="info-item"><span class="label">المغرب</span><span class="value" id="maghrib">-</span></div>
+                <div class="info-item"><span class="label">العشاء</span><span class="value" id="isha">-</span></div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>تم التطوير بكل فخر بواسطة <strong>Naif Aloufi</strong> &copy; 2026</p>
+    </footer>
+
+    <script>
+        // بدء التشغيل تلقائياً عند تحميل الصفحة
+        window.onload = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(initDashboard, handleError);
+            } else {
+                alert("متصفحك لا يدعم خاصية تحديد المواقع GPS.");
+            }
+        };
+
+        function handleError(error) {
+            alert("يرجى تفعيل خدمة الموقع (GPS) وإعطاء الإذن للموقع ليعمل بشكل صحيح.");
+        }
+
+        async function initDashboard(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            // عرض الإحداثيات الأساسية
+            document.getElementById('lat').innerText = lat.toFixed(4);
+            document.getElementById('lon').innerText = lon.toFixed(4);
+
+            // استدعاء البيانات بالتوازي لسرعة الأداء
+            await Promise.all([
+                getLocationName(lat, lon),
+                getWeatherData(lat, lon),
+                getPrayerTimes(lat, lon),
+                calculateQibla(lat, lon)
+            ]);
+
+            // إخفاء شاشة التحميل وعرض المحتوى
+            document.getElementById('loader').classList.add('hidden');
+            document.getElementById('main-content').classList.remove('hidden');
+
+            // تفعيل مستشعر البوصلة للجوالات (إن وُجد)
+            initCompass();
+        }
+
+        // 1. جلب اسم الموقع والمدينة
+        async function getLocationName(lat, lon) {
+            try {
+                const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=ar`);
+                const data = await res.json();
+                const city = data.city || data.principalSubdivision || "مكان غير معروف";
+                const locality = data.locality ? `, ${data.locality}` : "";
+                document.getElementById('loc-name').innerText = city + locality;
+            } catch (e) {
+                document.getElementById('loc-name').innerText = "تعذر جلب الاسم المعرب";
+            }
+        }
+
+        // 2. جلب بيانات الطقس والارتفاع وتوقعات الأمطار
+        async function getWeatherData(lat, lon) {
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m&daily=precipitation_probability_max&timezone=auto&elevation=true`;
+                const res = await fetch(url);
+                const data = await res.json();
+
+                document.getElementById('temp').innerText = `${data.current.temperature_2m}°م`;
+                document.getElementById('humidity').innerText = `${data.current.relative_humidity_2m}%`;
+                document.getElementById('wind-speed').innerText = `${data.current.wind_speed_10m} كم/س`;
+                document.getElementById('altitude').innerText = `${data.elevation || 0} م فوق سطح البحر`;
+                
+                if(data.daily && data.daily.precipitation_probability_max) {
+                    document.getElementById('rain-prob').innerText = `${data.daily.precipitation_probability_max[0]}%`;
+                }
+            } catch (e) {
+                console.error("خطأ في جلب بيانات الطقس", e);
+            }
+        }
+
+        // 3. جلب مواقيت الصلاة
+        async function getPrayerTimes(lat, lon) {
+            try {
+                const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(Date.now() / 1000)}?latitude=${lat}&longitude=${lon}&method=4`);
+                const data = await res.json();
+                const timings = data.data.timings;
+
+                document.getElementById('fajr').innerText = timings.Fajr;
+                document.getElementById('dhuhr').innerText = timings.Dhuhr;
+                document.getElementById('asr').innerText = timings.Asr;
+                document.getElementById('maghrib').innerText = timings.Maghrib;
+                document.getElementById('isha').innerText = timings.Isha;
+            } catch (e) {
+                console.error("خطأ في جلب مواقيت الصلاة", e);
+            }
+        }
+
+        // 4. حساب اتجاه القبلة رياضياً مقارنة بموقع مكة المكرمة
+        let qiblaAngle = 0;
+        function calculateQibla(lat, lon) {
+            const makkahLat = 21.4225;
+            const makkahLon = 39.8262;
+
+            const dLon = (makkahLon - lon) * Math.PI / 180;
+            const latRad = lat * Math.PI / 180;
+            const mLatRad = makkahLat * Math.PI / 180;
+
+            const y = Math.sin(dLon);
+            const x = Math.cos(latRad) * Math.tan(mLatRad) - Math.sin(latRad) * Math.cos(dLon);
+            
+            qiblaAngle = Math.atan2(y, x) * 180 / Math.PI;
+            qiblaAngle = (qiblaAngle + 360) % 360;
+
+            document.getElementById('qibla-text').innerText = `زاوية القبلة: ${qiblaAngle.toFixed(1)}° من اتجاه الشمال العادي`;
+            document.getElementById('qiblaArrow').style.transform = `rotate(${qiblaAngle}deg)`;
+        }
+
+        // 5. ربط البوصلة بمستشعرات الجوال الفليزرية (يعمل بشكل حيوي على المتصفحات المدعومة بالجوال كـ Safari و Chrome)
+        function initCompass() {
+            if (window.DeviceOrientationEvent) {
+                // للأجهزة التي تدعم iOS (طلب إذن مسبق للوصول للمستشعر)
+                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    window.addEventListener('click', () => {
+                        DeviceOrientationEvent.requestPermission()
+                            .then(response => {
+                                if (response == 'granted') {
+                                    window.addEventListener('deviceorientation', handleOrientation, true);
+                                }
+                            }).catch(console.error);
+                    }, { once: true });
+                } else {
+                    // لأجهزة الأندرويد ومتصفحات الويب الأخرى
+                    window.addEventListener('deviceorientationabsolute', handleOrientation, true);
+                    window.addEventListener('deviceorientation', handleOrientation, true);
+                }
+            }
+        }
+
+        function handleOrientation(event) {
+            let heading = event.alpha; // المتصفحات القياسية
+            if (event.webkitCompassHeading) {
+                heading = event.webkitCompassHeading; // لأجهزة الـ iPhone
+            }
+
+            if (heading !== null && heading !== undefined) {
+                // تدوير حلقة البوصلة لعكس اتجاه الشمال الحقيقي للهاتف
+                const compassRing = document.getElementById('compassRing');
+                compassRing.style.transform = `rotate(${-heading}deg)`;
+            }
+        }
+    </script>
+</body>
+</html>
