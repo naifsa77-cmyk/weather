@@ -57,7 +57,6 @@
             margin-top: 4px;
         }
 
-        /* شريط أزرار التحكم العلوي للتنقل */
         .nav-tabs {
             display: flex;
             justify-content: center;
@@ -203,10 +202,10 @@
             background: #0b0f19;
         }
 
-        /* إطار رادار الطائرات الضخم */
+        /* إطار رادار الطائرات المحدث والمضمون */
         .aircraft-container {
             width: 100%;
-            height: 550px;
+            height: 520px;
             border-radius: 24px;
             overflow: hidden;
             border: 1px solid var(--border-color);
@@ -422,12 +421,12 @@
 
     <div class="container hidden" id="aircraft-section">
         <div class="card">
-            <div class="card-title"><i class="fas fa-plane-departure"></i> رادار الأجواء والملاحة الجوية المباشر فوق موقعك</div>
+            <div class="card-title"><i class="fas fa-plane-departure"></i> رادار الملاحة الجوية المباشر والحي فوق موقعك</div>
             <div class="aircraft-container">
                 <iframe class="radar-frame" id="aircraftRadar" src=""></iframe>
             </div>
             <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; text-align: center; line-height: 1.4;">
-                * يعرض الرادار جميع مسارات الطائرات المدنية والتجارية، الطائرات العمودية، ومروحيات الإنقاذ المحلقة حالياً في محيط إحداثياتك الجغرافية.
+                * يقوم الرادار بمسح النطاق الجوي المحيط بك تلقائياً لعرض الطائرات المدنية والمروحيات التجارية والعسكرية حياً بالثانية.
             </p>
         </div>
     </div>
@@ -458,7 +457,6 @@
             }
         };
 
-        // تبديل العرض بين الأرصاد ورادار الطائرات سلاسة
         function switchView(viewType) {
             const weatherSection = document.getElementById('weather-section');
             const aircraftSection = document.getElementById('aircraft-section');
@@ -476,8 +474,8 @@
                 btnWeather.classList.remove('active');
                 btnAircraft.classList.add('active');
                 
-                // حقن خريطة رادار الطائرات حياً بالتوازي مع إحداثيات موقعك عند فتح التبويب
-                document.getElementById('aircraftRadar').src = `https://embed.adsbexchange.com/pages/map.html?lat=${currentLat}&lon=${currentLon}&zoom=8&theme=dark`;
+                // حقن رادار الطائرات العالمي الموثق والآمن والمفتوح Iframe (RadarBox) متمركزاً حول موقعك
+                document.getElementById('aircraftRadar').src = `https://www.radarbox.com/widget?lat=${currentLat}&lng=${currentLon}&z=8&label=1&theme=dark`;
             }
         }
 
@@ -552,7 +550,7 @@
                 updatePrayerCountdown();
 
             } catch (e) {
-                console.log("تأمين تدفق المصفوفات بنجاح.");
+                console.log("حفظ تدفق السيرفرات الجوية.");
             }
             calculateQibla(lat, lon);
         }
