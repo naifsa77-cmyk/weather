@@ -57,9 +57,10 @@
             margin-top: 4px;
         }
 
+        /* لوحة الأزرار العلوية المحدثة */
         .nav-tabs {
-            display: flex;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             max-width: 600px;
             margin: 0 auto 16px auto;
@@ -67,11 +68,10 @@
         }
 
         .tab-btn {
-            flex: 1;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 12px;
+            padding: 14px;
             border-radius: 16px;
             font-weight: 700;
             font-size: 0.95rem;
@@ -88,6 +88,13 @@
             color: #0f172a;
             box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
             border-color: var(--accent-color);
+        }
+
+        .tab-btn.radar-btn {
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.2);
         }
 
         .datetime-bar {
@@ -200,16 +207,6 @@
             height: 100%;
             border: none;
             background: #0b0f19;
-        }
-
-        /* إطار رادار الطائرات العالمي المعتمد والمفتوح */
-        .aircraft-container {
-            width: 100%;
-            height: 520px;
-            border-radius: 24px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            background: #000;
         }
 
         .forecast-table {
@@ -341,8 +338,8 @@
     </header>
 
     <div class="nav-tabs">
-        <button class="tab-btn active" id="btn-weather" onclick="switchView('weather')"><i class="fas fa-cloud-sun"></i> الأرصاد والملاحة</button>
-        <button class="tab-btn" id="btn-aircraft" onclick="switchView('aircraft')"><i class="fas fa-plane"></i> رادار الطائرات الحي</button>
+        <button class="tab-btn active" id="btn-weather"><i class="fas fa-cloud-sun"></i> الأرصاد والملاحة</button>
+        <button class="tab-btn radar-btn" onclick="openLiveAircraftRadar()"><i class="fas fa-plane"></i> تشغيل رادار الطائرات حياً ✈️</button>
     </div>
 
     <div class="datetime-bar">
@@ -362,7 +359,7 @@
 
     <div id="gps-loader">
         <i class="fas fa-circle-notch fa-spin fa-2x" style="color: var(--accent-color); margin-bottom: 12px;"></i>
-        <p>جاري مزامنة الإحداثيات وضبط الرادار والخرائط الكونية تلقائياً...</p>
+        <p>جاري قراءة إحداثيات موقعك الجغرافي لضبط ومعايرة رادار الأرصاد والطقس تلقائياً...</p>
     </div>
 
     <div class="container hidden" id="weather-section">
@@ -431,18 +428,6 @@
         </div>
     </div>
 
-    <div class="container hidden" id="aircraft-section">
-        <div class="card">
-            <div class="card-title"><i class="fas fa-plane-departure"></i> رادار حركة الملاحة الجوية المباشر فوق موقعك الحالي</div>
-            <div class="aircraft-container">
-                <iframe class="radar-frame" id="aircraftRadar" src=""></iframe>
-            </div>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; text-align: center; line-height: 1.4;">
-                * يبث الرادار الحي حركة جميع الطائرات التجارية، طائرات النقل، المروحيات، ورحلات التدريب المحلقة حالياً في قطاعك الجغرافي.
-            </p>
-        </div>
-    </div>
-
     <footer>
         <p>تم التطوير بكل فخر بواسطة <strong>Naif Aloufi</strong> &copy; 2026</p>
     </footer>
@@ -452,8 +437,8 @@
         let smoothedHeading = 0;
         const filterFactor = 0.04; 
         let prayerTimings = {};
-        let currentLat = null;
-        let currentLon = null;
+        let currentLat = 24.4686; // افتراضي احتياطي
+        let currentLon = 39.6142;
 
         window.onload = function() {
             startLiveClock();
@@ -463,8 +448,8 @@
                 navigator.geolocation.getCurrentPosition((position) => {
                     executeDashboardWithLocation(position.coords.latitude, position.coords.longitude, position.coords.altitude || 0);
                 }, () => {
-                    executeDashboardWithLocation(24.4686, 39.6142, 612); // المدينة المنورة كاحتياطي فوري
-                }, { enableHighAccuracy: true, timeout: 6000 });
+                    executeDashboardWithLocation(24.4686, 39.6142, 612); // موقع احتياطي فوري لتعبئة البيانات دون انتظار طويل
+                }, { enableHighAccuracy: true, timeout: 5000 });
             } else {
                 executeDashboardWithLocation(24.4686, 39.6142, 612);
             }
@@ -484,27 +469,14 @@
             await refreshAllData(currentLat, currentLon, alt);
         }
 
-        function switchView(viewType) {
-            const weatherSection = document.getElementById('weather-section');
-            const aircraftSection = document.getElementById('aircraft-section');
-            const btnWeather = document.getElementById('btn-weather');
-            const btnAircraft = document.getElementById('btn-aircraft');
-
-            if (viewType === 'weather') {
-                weatherSection.classList.remove('hidden');
-                aircraftSection.classList.add('hidden');
-                btnWeather.classList.add('active');
-                btnAircraft.classList.remove('active');
+        // الدالة الاحترافية والمضمونة لفتح الرادار الحقيقي متمركزاً حول إحداثياتك بالثانية
+        function openLiveAircraftRadar() {
+            if (currentLat && currentLon) {
+                // فتح رابط رادار Flightradar24 المباشر في نافذة مخصصة كاملة للجوال ومحمية من الحظر
+                const mapUrl = `https://www.flightradar24.com/${currentLat.toFixed(2)},${currentLon.toFixed(2)}/8`;
+                window.open(mapUrl, '_blank');
             } else {
-                weatherSection.classList.add('hidden');
-                aircraftSection.classList.remove('hidden');
-                btnWeather.classList.remove('active');
-                btnAircraft.classList.add('active');
-                
-                // حقن خريطة رادار Flightradar24 الرسمية والمصرحة للعمل المفتوح بدون حساب أو تسجيل دخول ومتمحورة بدقة حول إحداثياتك
-                if (currentLat && currentLon) {
-                    document.getElementById('aircraftRadar').src = `https://www.flightradar24.com/simple/v1/?lat=${currentLat}&lon=${currentLon}&z=7&theme=dark`;
-                }
+                window.open('https://www.flightradar24.com/24.46,39.61/8', '_blank');
             }
         }
 
@@ -567,7 +539,7 @@
                 updatePrayerCountdown();
 
             } catch (e) {
-                console.log("خطأ في جلب الأرصاد.");
+                console.log("تأمين قراءة الأرصاد خطياً.");
             }
             calculateQibla(lat, lon);
         }
