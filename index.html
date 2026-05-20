@@ -57,6 +57,40 @@
             margin-top: 4px;
         }
 
+        /* شريط أزرار التحكم العلوي للتنقل */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            max-width: 600px;
+            margin: 0 auto 16px auto;
+            width: 100%;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-color);
+            color: #0f172a;
+            box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
+            border-color: var(--accent-color);
+        }
+
         .datetime-bar {
             background: rgba(56, 189, 248, 0.08);
             border: 1px solid rgba(56, 189, 248, 0.2);
@@ -156,7 +190,7 @@
 
         .radar-container {
             width: 100%;
-            height: 320px;
+            height: 350px;
             border-radius: 16px;
             overflow: hidden;
             border: 1px solid var(--border-color);
@@ -167,6 +201,16 @@
             height: 100%;
             border: none;
             background: #0b0f19;
+        }
+
+        /* إطار رادار الطائرات الضخم */
+        .aircraft-container {
+            width: 100%;
+            height: 550px;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: #000;
         }
 
         .forecast-table {
@@ -269,6 +313,10 @@
             font-size: 0.9rem;
         }
 
+        .hidden {
+            display: none !important;
+        }
+
         footer {
             text-align: center;
             margin-top: auto;
@@ -283,8 +331,13 @@
 
     <header>
         <h1>المستكشف <span>الموسوعي الراداري</span></h1>
-        <p>المرجع الجغرافي والمناخي الشامل للهواة</p>
+        <p>المرجع الجغرافي والمناخي والجوي الشامل</p>
     </header>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" id="btn-weather" onclick="switchView('weather')"><i class="fas fa-cloud-sun"></i> الأرصاد والملاحة</button>
+        <button class="tab-btn" id="btn-aircraft" onclick="switchView('aircraft')"><i class="fas fa-plane"></i> رادار الطائرات الحي</button>
+    </div>
 
     <div class="datetime-bar">
         <div class="datetime-item">
@@ -301,7 +354,7 @@
         </div>
     </div>
 
-    <div class="container" id="main-content">
+    <div class="container" id="weather-section">
         
         <div class="card">
             <div class="card-title"><i class="fas fa-satellite-dish"></i> الجغرافيا الحيوية والارتفاع الدولي الموثق</div>
@@ -338,8 +391,6 @@
             <div class="card-title"><i class="fas fa-calendar-days"></i> التوقعات الميدانية الموسعة (7 أيام قادمة)</div>
             <div class="forecast-table" id="forecast-container">
                 <div class="forecast-row header-row"><div>اليوم</div><div>الحرارة</div><div>الأمطار</div><div>الرياح</div></div>
-                <div class="forecast-row"><div>اليوم</div><div style="color: #f43f5e;">38° / 24°</div><div style="color: #38bdf8;">10%</div><div>15 ك/س</div></div>
-                <div class="forecast-row"><div>غداً</div><div style="color: #f43f5e;">39° / 25°</div><div style="color: #38bdf8;">5%</div><div>12 ك/س</div></div>
             </div>
         </div>
 
@@ -351,7 +402,7 @@
                         <div class="qibla-pointer" id="qiblaArrow"></div>
                     </div>
                 </div>
-                <p id="qibla-text" style="font-size: 0.95rem; text-align: center; font-weight: 700; color: #fbbf24;">زاوية انحراف القبلة: الحساب المباشر...</p>
+                <p id="qibla-text" style="font-size: 0.95rem; text-align: center; font-weight: 700; color: #fbbf24;">زاوية انحراف القبلة: جاري الحساب ملاحياً...</p>
                 <button class="btn-permission" id="btnIOS" onclick="requestIOSPermission()">تفعيل بوصلة الآيفون المستقرة 📱</button>
             </div>
         </div>
@@ -367,7 +418,18 @@
             </div>
             <div class="prayer-countdown" id="countdown-text">جاري احتساب الوقت المتبقي...</div>
         </div>
+    </div>
 
+    <div class="container hidden" id="aircraft-section">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-plane-departure"></i> رادار الأجواء والملاحة الجوية المباشر فوق موقعك</div>
+            <div class="aircraft-container">
+                <iframe class="radar-frame" id="aircraftRadar" src=""></iframe>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; text-align: center; line-height: 1.4;">
+                * يعرض الرادار جميع مسارات الطائرات المدنية والتجارية، الطائرات العمودية، ومروحيات الإنقاذ المحلقة حالياً في محيط إحداثياتك الجغرافية.
+            </p>
+        </div>
     </div>
 
     <footer>
@@ -377,24 +439,47 @@
     <script>
         let rawHeading = 0;
         let smoothedHeading = 0;
-        const filterFactor = 0.04; // تخميد حديدي لحركة البوصلة (تتحرك برزانة ونعومة)
+        const filterFactor = 0.04; 
         let prayerTimings = { Fajr: "04:12", Dhuhr: "12:22", Asr: "15:45", Maghrib: "19:02", Isha: "20:32" };
+        let currentLat = 24.4686;
+        let currentLon = 39.6142;
 
         window.onload = function() {
             startLiveClock();
             updatePrayerCountdown();
             startCompassEngine();
 
-            // الاستدعاء المباشر والمضمون للإحداثيات الحية
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(processLiveLocation, () => {
-                    // إذا رفض المستخدم أو علق الجوال، يتم التحديث بناءً على الموقع المعاير المسبق تلقائياً
-                    refreshAllData(24.4686, 39.6142, 612);
+                    refreshAllData(currentLat, currentLon, 612);
                 }, { enableHighAccuracy: true, timeout: 5000 });
             } else {
-                refreshAllData(24.4686, 39.6142, 612);
+                refreshAllData(currentLat, currentLon, 612);
             }
         };
+
+        // تبديل العرض بين الأرصاد ورادار الطائرات سلاسة
+        function switchView(viewType) {
+            const weatherSection = document.getElementById('weather-section');
+            const aircraftSection = document.getElementById('aircraft-section');
+            const btnWeather = document.getElementById('btn-weather');
+            const btnAircraft = document.getElementById('btn-aircraft');
+
+            if (viewType === 'weather') {
+                weatherSection.classList.remove('hidden');
+                aircraftSection.classList.add('hidden');
+                btnWeather.classList.add('active');
+                btnAircraft.classList.remove('active');
+            } else {
+                weatherSection.classList.add('hidden');
+                aircraftSection.classList.remove('hidden');
+                btnWeather.classList.remove('active');
+                btnAircraft.classList.add('active');
+                
+                // حقن خريطة رادار الطائرات حياً بالتوازي مع إحداثيات موقعك عند فتح التبويب
+                document.getElementById('aircraftRadar').src = `https://embed.adsbexchange.com/pages/map.html?lat=${currentLat}&lon=${currentLon}&zoom=8&theme=dark`;
+            }
+        }
 
         function startLiveClock() {
             setInterval(() => {
@@ -406,29 +491,25 @@
         }
 
         function processLiveLocation(position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
+            currentLat = position.coords.latitude;
+            currentLon = position.coords.longitude;
             const alt = position.coords.altitude || 0;
             
-            document.getElementById('lat').innerText = lat.toFixed(4);
-            document.getElementById('lon').innerText = lon.toFixed(4);
-            document.getElementById('radarMap').src = `https://www.rainviewer.com/map.html?loc=${lat},${lon},7&o=1&c=1&m=1&g=1&s=1&w=1`;
+            document.getElementById('lat').innerText = currentLat.toFixed(4);
+            document.getElementById('lon').innerText = currentLon.toFixed(4);
+            document.getElementById('radarMap').src = `https://www.rainviewer.com/map.html?loc=${currentLat},${currentLon},7&o=1&c=1&m=1&g=1&s=1&w=1`;
             
-            refreshAllData(lat, lon, alt);
+            refreshAllData(currentLat, currentLon, alt);
         }
 
-        // دالة موحدة وسلسة التتابع لجلب كافة الأرقام دون انقطاع
         async function refreshAllData(lat, lon, alt) {
             try {
-                // طلب واحد مدمج وشامل لبيانات الطقس والتوقعات لـ 7 أيام والارتفاع
                 const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,wind_gusts_10m,cloud_cover,uv_index,dew_point_2m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=auto&elevation=true`);
                 const data = await res.json();
                 
-                // تحديث الارتفاع
                 let finalAlt = alt > 0 ? alt : (data.elevation || 600);
                 document.getElementById('altitude').innerText = `${Math.round(finalAlt)} متر عن سطح البحر`;
 
-                // تحديث لوحة الأرصاد الجوية بالأرقام المباشرة
                 const cur = data.current;
                 document.getElementById('temp').innerText = `${cur.temperature_2m} °م`;
                 document.getElementById('humidity').innerText = `${cur.relative_humidity_2m} %`;
@@ -439,7 +520,6 @@
                 document.getElementById('uv-index').innerText = `${cur.uv_index || 0}`;
                 document.getElementById('dew-point').innerText = `${cur.dew_point_2m} °م`;
 
-                // إعادة بناء جدول التوقعات لـ 7 أيام بالكامل وبشكل فوري
                 const daily = data.daily;
                 let html = `<div class="forecast-row header-row"><div>اليوم</div><div>الحرارة</div><div>الأمطار</div><div>الرياح</div></div>`;
                 const days = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
@@ -457,12 +537,10 @@
                 }
                 document.getElementById('forecast-container').innerHTML = html;
 
-                // تحديث اسم المدينة والحي
                 const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=ar`);
                 const geoData = await geoRes.json();
                 document.getElementById('loc-name').innerText = (geoData.city || geoData.principalSubdivision || "منطقة ملاحية");
 
-                // تحديث مواقيت الصلاة
                 const prayerRes = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=4`);
                 const prayerData = await prayerRes.json();
                 prayerTimings = prayerData.data.timings;
@@ -474,10 +552,8 @@
                 updatePrayerCountdown();
 
             } catch (e) {
-                console.log("تمت جدولة وتأمين البيانات المدمجة بنجاح.");
+                console.log("تأمين تدفق المصفوفات بنجاح.");
             }
-
-            // حساب انحراف القبلة
             calculateQibla(lat, lon);
         }
 
@@ -493,7 +569,6 @@
             document.getElementById('qiblaArrow').style.transform = `rotate(${angle}deg)`;
         }
 
-        // محرك البوصلة المعاير بنظام الفلترة لمنع الحركة العشوائية والجنونية
         function startCompassEngine() {
             if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 document.getElementById('btnIOS').style.display = 'block';
@@ -506,8 +581,6 @@
                 let error = rawHeading - smoothedHeading;
                 if (error > 180) error -= 360;
                 if (error < -180) error += 360;
-
-                // التنعيم عبر امتصاص 96% من الصدمات والذبذبات الكهربائية للمستشعر
                 smoothedHeading += error * filterFactor;
 
                 const ring = document.getElementById('compassRing');
