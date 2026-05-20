@@ -202,7 +202,7 @@
             background: #0b0f19;
         }
 
-        /* إطار رادار الطائرات المحدث والمضمون */
+        /* إطار رادار الطائرات الجديد المباشر بدون حساب */
         .aircraft-container {
             width: 100%;
             height: 520px;
@@ -312,6 +312,14 @@
             font-size: 0.9rem;
         }
 
+        /* شاشة انتظار الجي بي إس لمنع الفراغات */
+        #gps-loader {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -353,36 +361,41 @@
         </div>
     </div>
 
-    <div class="container" id="weather-section">
+    <div id="gps-loader">
+        <i class="fas fa-circle-notch fa-spin fa-2x" style="color: var(--accent-color); margin-bottom: 12px;"></i>
+        <p>جاري قراءة إحداثيات موقعك الجغرافي لضبط ومعايرة رادار الأرصاد والطقس تلقائياً...</p>
+    </div>
+
+    <div class="container hidden" id="weather-section">
         
         <div class="card">
             <div class="card-title"><i class="fas fa-satellite-dish"></i> الجغرافيا الحيوية والارتفاع الدولي الموثق</div>
             <div class="info-grid">
-                <div class="info-item"><i class="fas fa-location-crosshairs" style="color: #a855f7;"></i><div class="info-data"><span class="label">الموقع الحالي</span><span class="value" id="loc-name">المنطقة العامة (تلقائي)</span></div></div>
-                <div class="info-item"><i class="fas fa-mountain-sun" style="color: #e2e8f0;"></i><div class="info-data"><span class="label">الارتفاع عن سطح البحر</span><span class="value" id="altitude">612 متر</span></div></div>
-                <div class="info-item"><i class="fas fa-globe" style="color: #38bdf8;"></i><div class="info-data"><span class="label">خط العرض (Lat)</span><span class="value" id="lat">24.4686</span></div></div>
-                <div class="info-item"><i class="fas fa-globe" style="color: #38bdf8;"></i><div class="info-data"><span class="label">خط الطول (Lon)</span><span class="value" id="lon">39.6142</span></div></div>
+                <div class="info-item"><i class="fas fa-location-crosshairs" style="color: #a855f7;"></i><div class="info-data"><span class="label">الموقع الحالي</span><span class="value" id="loc-name">جاري التحديد الميداني...</span></div></div>
+                <div class="info-item"><i class="fas fa-mountain-sun" style="color: #e2e8f0;"></i><div class="info-data"><span class="label">الارتفاع عن سطح البحر</span><span class="value" id="altitude">-</span></div></div>
+                <div class="info-item"><i class="fas fa-globe" style="color: #38bdf8;"></i><div class="info-data"><span class="label">خط العرض (Lat)</span><span class="value" id="lat">-</span></div></div>
+                <div class="info-item"><i class="fas fa-globe" style="color: #38bdf8;"></i><div class="info-data"><span class="label">خط الطول (Lon)</span><span class="value" id="lon">-</span></div></div>
             </div>
         </div>
 
         <div class="card">
             <div class="card-title"><i class="fas fa-radar"></i> الرادار الجوي المباشر (حركة السحب والأمطار حياً)</div>
             <div class="radar-container">
-                <iframe class="radar-frame" id="radarMap" src="https://www.rainviewer.com/map.html?loc=24.4686,39.6142,6&o=1&c=1&m=1&g=1&s=1&w=1"></iframe>
+                <iframe class="radar-frame" id="radarMap" src=""></iframe>
             </div>
         </div>
 
         <div class="card">
             <div class="card-title"><i class="fas fa-temperature-half"></i> الأرصاد الحالية الفورية الحية</div>
             <div class="info-grid">
-                <div class="info-item"><i class="fas fa-temperature-high" style="color: #ef4444;"></i><div class="info-data"><span class="label">درجة الحرارة</span><span class="value" id="temp">36.5 °م</span></div></div>
-                <div class="info-item"><i class="fas fa-droplet" style="color: #3b82f6;"></i><div class="info-data"><span class="label">الرطوبة النسبية</span><span class="value" id="humidity">18 %</span></div></div>
-                <div class="info-item"><i class="fas fa-wind" style="color: #94a3b8;"></i><div class="info-data"><span class="label">سرعة الرياح</span><span class="value" id="wind-speed">14 كم/س</span></div></div>
-                <div class="info-item"><i class="fas fa-cloud-bounce" style="color: #f59e0b;"></i><div class="info-data"><span class="label">هبات الرياح العاصفة</span><span class="value" id="wind-gusts">22 كم/س</span></div></div>
-                <div class="info-item"><i class="fas fa-gauge" style="color: #10b981;"></i><div class="info-data"><span class="label">الضغط الجوي الفعلي</span><span class="value" id="pressure">1011 hPa</span></div></div>
-                <div class="info-item"><i class="fas fa-cloud-sun" style="color: #cbd5e1;"></i><div class="info-data"><span class="label">نسبة الغطاء السحابي</span><span class="value" id="cloud-cover">12 %</span></div></div>
-                <div class="info-item"><i class="fas fa-sun" style="color: #eab308;"></i><div class="info-data"><span class="label">مؤشر الأشعة الشمسية UV</span><span class="value" id="uv-index">9</span></div></div>
-                <div class="info-item"><i class="fas fa-glass-water" style="color: #22d3ee;"></i><div class="info-data"><span class="label">نقطة الندى والتكثف</span><span class="value" id="dew-point">8 °م</span></div></div>
+                <div class="info-item"><i class="fas fa-temperature-high" style="color: #ef4444;"></i><div class="info-data"><span class="label">درجة الحرارة</span><span class="value" id="temp">-</span></div></div>
+                <div class="info-item"><i class="fas fa-droplet" style="color: #3b82f6;"></i><div class="info-data"><span class="label">الرطوبة النسبية</span><span class="value" id="humidity">-</span></div></div>
+                <div class="info-item"><i class="fas fa-wind" style="color: #94a3b8;"></i><div class="info-data"><span class="label">سرعة الرياح</span><span class="value" id="wind-speed">-</span></div></div>
+                <div class="info-item"><i class="fas fa-cloud-bounce" style="color: #f59e0b;"></i><div class="info-data"><span class="label">هبات الرياح العاصفة</span><span class="value" id="wind-gusts">-</span></div></div>
+                <div class="info-item"><i class="fas fa-gauge" style="color: #10b981;"></i><div class="info-data"><span class="label">الضغط الجوي الفعلي</span><span class="value" id="pressure">-</span></div></div>
+                <div class="info-item"><i class="fas fa-cloud-sun" style="color: #cbd5e1;"></i><div class="info-data"><span class="label">نسبة الغطاء السحابي</span><span class="value" id="cloud-cover">-</span></div></div>
+                <div class="info-item"><i class="fas fa-sun" style="color: #eab308;"></i><div class="info-data"><span class="label">مؤشر الأشعة الشمسية UV</span><span class="value" id="uv-index">-</span></div></div>
+                <div class="info-item"><i class="fas fa-glass-water" style="color: #22d3ee;"></i><div class="info-data"><span class="label">نقطة الندى والتكثف</span><span class="value" id="dew-point">-</span></div></div>
             </div>
         </div>
 
@@ -409,11 +422,11 @@
         <div class="card">
             <div class="card-title"><i class="fas fa-clock"></i> المواقيت الشرعية والفلكية الدقيقة</div>
             <div class="info-grid">
-                <div class="info-item"><i class="text-muted">الفجر</i><span class="value" id="fajr">04:12</span></div>
-                <div class="info-item"><i class="text-muted">الظهر</i><span class="value" id="dhuhr">12:22</span></div>
-                <div class="info-item"><i class="text-muted">العصر</i><span class="value" id="asr">15:45</span></div>
-                <div class="info-item"><i class="text-muted">المغرب</i><span class="value" id="maghrib">19:02</span></div>
-                <div class="info-item"><i class="text-muted">العشاء</i><span class="value" id="isha">20:32</span></div>
+                <div class="info-item"><i class="text-muted">الفجر</i><span class="value" id="fajr">-</span></div>
+                <div class="info-item"><i class="text-muted">الظهر</i><span class="value" id="dhuhr">-</span></div>
+                <div class="info-item"><i class="text-muted">العصر</i><span class="value" id="asr">-</span></div>
+                <div class="info-item"><i class="text-muted">المغرب</i><span class="value" id="maghrib">-</span></div>
+                <div class="info-item"><i class="text-muted">العشاء</i><span class="value" id="isha">-</span></div>
             </div>
             <div class="prayer-countdown" id="countdown-text">جاري احتساب الوقت المتبقي...</div>
         </div>
@@ -421,12 +434,12 @@
 
     <div class="container hidden" id="aircraft-section">
         <div class="card">
-            <div class="card-title"><i class="fas fa-plane-departure"></i> رادار الملاحة الجوية المباشر والحي فوق موقعك</div>
+            <div class="card-title"><i class="fas fa-plane-departure"></i> رادار حركة الطائرات والملاحة الجوية المباشر فوق موقعك</div>
             <div class="aircraft-container">
                 <iframe class="radar-frame" id="aircraftRadar" src=""></iframe>
             </div>
             <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; text-align: center; line-height: 1.4;">
-                * يقوم الرادار بمسح النطاق الجوي المحيط بك تلقائياً لعرض الطائرات المدنية والمروحيات التجارية والعسكرية حياً بالثانية.
+                * يعرض الرادار البث الحي بالثانية لجميع الخطوط الجوية والرحلات التجارية والمروحيات المحلقة حالياً في قطاعك الجغرافي.
             </p>
         </div>
     </div>
@@ -439,23 +452,43 @@
         let rawHeading = 0;
         let smoothedHeading = 0;
         const filterFactor = 0.04; 
-        let prayerTimings = { Fajr: "04:12", Dhuhr: "12:22", Asr: "15:45", Maghrib: "19:02", Isha: "20:32" };
-        let currentLat = 24.4686;
-        let currentLon = 39.6142;
+        let prayerTimings = {};
+        let currentLat = null;
+        let currentLon = null;
 
         window.onload = function() {
             startLiveClock();
-            updatePrayerCountdown();
             startCompassEngine();
 
+            // نظام تتبع وإحضار دقيق وفوري للموقع لضمان تعبئة البيانات من أول لقطة تلقائياً
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(processLiveLocation, () => {
-                    refreshAllData(currentLat, currentLon, 612);
-                }, { enableHighAccuracy: true, timeout: 5000 });
+                navigator.geolocation.getCurrentPosition((position) => {
+                    executeDashboardWithLocation(position.coords.latitude, position.coords.longitude, position.coords.altitude || 0);
+                }, () => {
+                    // موقع احتياطي فوري (المدينة المنورة) في حال تعذر الـ GPS لكي لا تتوقف اللوحة
+                    executeDashboardWithLocation(24.4686, 39.6142, 612);
+                }, { enableHighAccuracy: true, timeout: 6000 });
             } else {
-                refreshAllData(currentLat, currentLon, 612);
+                executeDashboardWithLocation(24.4686, 39.6142, 612);
             }
         };
+
+        // دالة المحرك الأساسية: لا تعمل إلا بعد وجود الإحداثيات رسمياً
+        async function executeDashboardWithLocation(lat, lon, alt) {
+            currentLat = lat;
+            currentLon = lon;
+
+            // إخفاء شاشة الانتظار وإظهار المحتوى المكتمل
+            document.getElementById('gps-loader').classList.add('hidden');
+            document.getElementById('weather-section').classList.remove('hidden');
+
+            document.getElementById('lat').innerText = currentLat.toFixed(4);
+            document.getElementById('lon').innerText = currentLon.toFixed(4);
+            document.getElementById('radarMap').src = `https://www.rainviewer.com/map.html?loc=${currentLat},${currentLon},7&o=1&c=1&m=1&g=1&s=1&w=1`;
+
+            // جلب الأرصاد والبيانات خطياً بشكل آمن وضامن للتعبئة المباشرة
+            await refreshAllData(currentLat, currentLon, alt);
+        }
 
         function switchView(viewType) {
             const weatherSection = document.getElementById('weather-section');
@@ -474,8 +507,10 @@
                 btnWeather.classList.remove('active');
                 btnAircraft.classList.add('active');
                 
-                // حقن رادار الطائرات العالمي الموثق والآمن والمفتوح Iframe (RadarBox) متمركزاً حول موقعك
-                document.getElementById('aircraftRadar').src = `https://www.radarbox.com/widget?lat=${currentLat}&lng=${currentLon}&z=8&label=1&theme=dark`;
+                // رادار FlightAware المباشر 100% بدون حساب أو تسجيل دخول ومتمحور حول إحداثياتك
+                if (currentLat && currentLon) {
+                    document.getElementById('aircraftRadar').src = `https://ar.flightaware.com/live/map?lat=${currentLat}&lon=${currentLon}&zoom=6`;
+                }
             }
         }
 
@@ -486,18 +521,6 @@
                 document.getElementById('gregorian-date').innerText = now.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' });
                 document.getElementById('hijri-date').innerText = now.toLocaleDateString('ar-SA-u-ca-islamic-umalqura', { year: 'numeric', month: 'long', day: 'numeric' });
             }, 1000);
-        }
-
-        function processLiveLocation(position) {
-            currentLat = position.coords.latitude;
-            currentLon = position.coords.longitude;
-            const alt = position.coords.altitude || 0;
-            
-            document.getElementById('lat').innerText = currentLat.toFixed(4);
-            document.getElementById('lon').innerText = currentLon.toFixed(4);
-            document.getElementById('radarMap').src = `https://www.rainviewer.com/map.html?loc=${currentLat},${currentLon},7&o=1&c=1&m=1&g=1&s=1&w=1`;
-            
-            refreshAllData(currentLat, currentLon, alt);
         }
 
         async function refreshAllData(lat, lon, alt) {
@@ -550,7 +573,7 @@
                 updatePrayerCountdown();
 
             } catch (e) {
-                console.log("حفظ تدفق السيرفرات الجوية.");
+                console.log("تحديث وتثبيت تدفق البيانات الجوية.");
             }
             calculateQibla(lat, lon);
         }
@@ -579,7 +602,7 @@
                 let error = rawHeading - smoothedHeading;
                 if (error > 180) error -= 360;
                 if (error < -180) error += 360;
-                smoothedHeading += error * filterFactor;
+                smoothedHeading += error * smoothedHeading === 0 ? 1.0 : filterFactor;
 
                 const ring = document.getElementById('compassRing');
                 if (ring) ring.style.transform = `rotate(${-smoothedHeading}deg)`;
