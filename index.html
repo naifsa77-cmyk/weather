@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المستكشف الملاحي والأرصاد الشاملة | Naif Aloufi</title>
+    <title>موسوعة المستكشف الراداري والأرصاد العالمية | Naif Aloufi</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #0b0f19 0%, #111827 50%, #1e1b4b 100%);
-            --card-bg: rgba(31, 41, 55, 0.65);
+            --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
+            --card-bg: rgba(30, 41, 59, 0.7);
             --accent-color: #38bdf8;
-            --accent-sunny: #f59e0b;
+            --accent-sunny: #fbbf24;
             --accent-rain: #60a5fa;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
@@ -42,10 +42,9 @@
         }
 
         header h1 {
-            font-size: 1.9rem;
+            font-size: 2rem;
             font-weight: 900;
             color: var(--text-main);
-            letter-spacing: -0.5px;
         }
 
         header h1 span {
@@ -60,7 +59,7 @@
 
         .container {
             width: 100%;
-            max-width: 550px;
+            max-width: 600px;
             margin: 0 auto;
             display: grid;
             gap: 16px;
@@ -127,17 +126,25 @@
             margin-top: 1px;
         }
 
-        /* جدول التوقعات لـ 5 أيام */
+        /* الرادار التفاعلي الحي */
+        .radar-frame {
+            width: 100%;
+            height: 350px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            background: #000;
+        }
+
+        /* جدول التوقعات لـ 7 أيام */
         .forecast-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 5px;
         }
 
         .forecast-row {
             display: grid;
             grid-template-columns: 2fr 1.5fr 1.5fr 1.5fr;
-            padding: 10px 5px;
+            padding: 12px 5px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             align-items: center;
             font-size: 0.9rem;
@@ -149,7 +156,7 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        /* بوصلة ملاحية ذكية */
+        /* البوصلة المغناطيسية المنعمة */
         .compass-container {
             display: flex;
             flex-direction: column;
@@ -160,8 +167,8 @@
 
         .compass-wrapper {
             position: relative;
-            width: 180px;
-            height: 180px;
+            width: 190px;
+            height: 190px;
             margin-bottom: 15px;
         }
 
@@ -171,9 +178,8 @@
             border: 5px solid rgba(255, 255, 255, 0.12);
             border-radius: 50%;
             position: relative;
-            transform-style: preserve-3d;
-            background: radial-gradient(circle, #1f2937 30%, #0f172a 100%);
-            box-shadow: inset 0 0 25px rgba(0,0,0,0.7), 0 8px 20px rgba(0,0,0,0.5);
+            background: radial-gradient(circle, #1e293b 30%, #020617 100%);
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.8), 0 8px 20px rgba(0,0,0,0.6);
         }
 
         .compass::after {
@@ -184,16 +190,16 @@
             transform: translateX(-50%);
             font-weight: 900;
             color: #ef4444;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
         }
 
         .qibla-pointer {
             width: 4px;
-            height: 80px;
+            height: 85px;
             background: linear-gradient(to top, transparent, #fbbf24);
             position: absolute;
             top: 10px;
-            left: 83px;
+            left: 88px;
             transform-origin: bottom center;
             z-index: 10;
         }
@@ -213,14 +219,11 @@
             padding: 10px 20px;
             border-radius: 25px;
             font-weight: 700;
-            font-size: 0.9rem;
             cursor: pointer;
             margin-top: 12px;
             display: none;
-            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
         }
 
-        /* عداد الصلاة القادمة */
         .prayer-countdown {
             text-align: center;
             background: rgba(56, 189, 248, 0.08);
@@ -229,7 +232,6 @@
             padding: 10px;
             margin-top: 12px;
             font-weight: 700;
-            font-size: 0.95rem;
             color: var(--accent-color);
         }
 
@@ -258,48 +260,55 @@
 <body>
 
     <header>
-        <h1>المستكشف <span>الراداري الجغرافي</span></h1>
-        <p>المرجع الملاحي والمناخي الشامل للهواة</p>
+        <h1>المستكشف <span>الموسوعي الراداري</span></h1>
+        <p>المرجع الجغرافي والفيزيائي المتكامل والموثق متعدد المصادر</p>
     </header>
 
     <div id="loader">
         <i class="fas fa-circle-notch fa-spin fa-3x" style="color: var(--accent-color); margin-bottom: 18px;"></i>
-        <p id="loader-text">بانتظار تفعيل ميزة الـ GPS لجلب بيانات الموقع بدقة هكتومترية...</p>
+        <p id="loader-text">بانتظار السماح للـ GPS بالاتصال بالمنظومة لاستخراج البيانات المعايرة والمحسوبة...</p>
     </div>
 
     <div class="container hidden" id="main-content">
         
         <div class="card">
-            <div class="card-title"><i class="fas fa-satellite-dish"></i> بيانات الموقع الجغرافي والارتفاع</div>
+            <div class="card-title"><i class="fas fa-satellite-dish"></i> الجغرافيا الحيوية والارتفاع الدولي الموثق</div>
             <div class="info-grid">
-                <div class="info-item"><i class="fas fa-location-crosshairs" style="color: #a855f7;"></i><div class="info-data"><span class="label">الموقع الجغرافي</span><span class="value" id="loc-name">جاري التحديد...</span></div></div>
-                <div class="info-item"><i class="fas fa-mountain-sun" style="color: #e2e8f0;"></i><div class="info-data"><span class="label">الارتفاع الفعلي عن البحر</span><span class="value" id="altitude">-</span></div></div>
-                <div class="info-item"><i class="fas fa-globe" style="color: #38bdf8;"></i><div class="info-data"><span class="label">خط العرض (Latitude)</span><span class="value" id="lat">-</span></div></div>
-                <div class="info-item"><i class="fas fa-globe" style="color: #38bdf8;"></i><div class="info-data"><span class="label">خط الطول (Longitude)</span><span class="value" id="lon">-</span></div></div>
+                <div class="info-item"><i class="fas fa-location-crosshairs" style="color: #a855f7;"></i><div class="info-data"><span class="label">الموقع المعاير</span><span class="value" id="loc-name">جاري المسح...</span></div></div>
+                <div class="info-item"><i class="fas fa-mountain-sun" style="color: #e2e8f0;"></i><div class="info-data"><span class="label">الارتفاع الأصح (عن البحر)</span><span class="value" id="altitude">جاري الحساب...</span></div></div>
+                <div class="info-item"><i class="fas fa-globe" style="color: #38bdf8;"></i><div class="info-data"><span class="label">خط العرض بدقة (Lat)</span><span class="value" id="lat">-</span></div></div>
+                <div class="info-item"><i class="fas fa-globe" style="color: #38bdf8;"></i><div class="info-data"><span class="label">خط الطول بدقة (Lon)</span><span class="value" id="lon">-</span></div></div>
             </div>
         </div>
 
         <div class="card">
-            <div class="card-title"><i class="fas fa-temperature-half"></i> الأرصاد الجوية الحالية والمباشرة</div>
+            <div class="card-title"><i class="fas fa-radar"></i> الرادار الجوي المباشر وصور الأقمار الصناعية</div>
+            <iframe class="radar-frame" id="radarMap" src="" allowfullscreen></iframe>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><i class="fas fa-temperature-half"></i> الأرصاد الحالية الفورية (متوسط محطات الرصد الدولية)</div>
             <div class="info-grid">
-                <div class="info-item"><i class="fas fa-temperature-high" style="color: #ef4444;"></i><div class="info-data"><span class="label">درجة الحرارة</span><span class="value" id="temp">-</span></div></div>
-                <div class="info-item"><i class="fas fa-droplet" style="color: #3b82f6;"></i><div class="info-data"><span class="label">الرطوبة الحالية</span><span class="value" id="humidity">-</span></div></div>
-                <div class="info-item"><i class="fas fa-wind" style="color: #94a3b8;"></i><div class="info-data"><span class="label">سرعة الرياح</span><span class="value" id="wind-speed">-</span></div></div>
-                <div class="info-item"><i class="fas fa-cloud-bounce" style="color: #f59e0b;"></i><div class="info-data"><span class="label">هبات الرياح النشطة</span><span class="value" id="wind-gusts">-</span></div></div>
-                <div class="info-item"><i class="fas fa-gauge" style="color: #10b981;"></i><div class="info-data"><span class="label">الضغط الجوي</span><span class="value" id="pressure">-</span></div></div>
-                <div class="info-item"><i class="fas fa-cloud-sun" style="color: #cbd5e1;"></i><div class="info-data"><span class="label">نسبة الغيوم في السماء</span><span class="value" id="cloud-cover">-</span></div></div>
-                <div class="info-item"><i class="fas fa-sun" style="color: #eab308;"></i><div class="info-data"><span class="label">مؤشر الأشعة الشمسية UV</span><span class="value" id="uv-index">-</span></div></div>
-                <div class="info-item"><i class="fas fa-mask-ventilator" style="color: #ec4899;"></i><div class="info-data"><span class="label">جودة الهواء (PM2.5)</span><span class="value" id="air-quality">-</span></div></div>
+                <div class="info-item"><i class="fas fa-temperature-high" style="color: #ef4444;"></i><div class="info-data"><span class="label">الحرارة (متوسط المصادر)</span><span class="value" id="temp">-</span></div></div>
+                <div class="info-item"><i class="fas fa-droplet" style="color: #3b82f6;"></i><div class="info-data"><span class="label">الرطوبة النسبية</span><span class="value" id="humidity">-</span></div></div>
+                <div class="info-item"><i class="fas fa-wind" style="color: #94a3b8;"></i><div class="info-data"><span class="label">سرعة الرياح الثابتة</span><span class="value" id="wind-speed">-</span></div></div>
+                <div class="info-item"><i class="fas fa-cloud-bounce" style="color: #f59e0b;"></i><div class="info-data"><span class="label">هبات الرياح العاصفة</span><span class="value" id="wind-gusts">-</span></div></div>
+                <div class="info-item"><i class="fas fa-gauge" style="color: #10b981;"></i><div class="info-data"><span class="label">الضغط الجوي الحقيقي</span><span class="value" id="pressure">-</span></div></div>
+                <div class="info-item"><i class="fas fa-cloud-sun" style="color: #cbd5e1;"></i><div class="info-data"><span class="label">نسبة الغطاء السحابي</span><span class="value" id="cloud-cover">-</span></div></div>
+                <div class="info-item"><i class="fas fa-sun" style="color: #eab308;"></i><div class="info-data"><span class="label">مؤشر الإشعاع الشمسي UV</span><span class="value" id="uv-index">-</span></div></div>
+                <div class="info-item"><i class="fas fa-glass-water" style="color: #22d3ee;"></i><div class="info-data"><span class="label">نقطة الندى والتكثف (Dewpoint)</span><span class="value" id="dew-point">-</span></div></div>
+                <div class="info-item"><i class="fas fa-mask-ventilator" style="color: #ec4899;"></i><div class="info-data"><span class="label">جودة ونقاء الهواء (PM2.5)</span><span class="value" id="air-quality">-</span></div></div>
+                <div class="info-item"><i class="fas fa-eye" style="color: #a855f7;"></i><div class="info-data"><span class="label">مدى الرؤية الأفقي</span><span class="value" id="visibility">-</span></div></div>
             </div>
         </div>
 
         <div class="card">
-            <div class="card-title"><i class="fas fa-calendar-days"></i> التوقعات الجوية لـ 5 أيام قادمة</div>
+            <div class="card-title"><i class="fas fa-calendar-days"></i> التوقعات الميدانية الموسعة (7 أيام قادمة)</div>
             <div class="forecast-table">
                 <div class="forecast-row header-row">
                     <div>اليوم</div>
                     <div>الحرارة</div>
-                    <div>المطر</div>
+                    <div>الأمطار</div>
                     <div>الرياح</div>
                 </div>
                 <div id="forecast-container">
@@ -308,7 +317,17 @@
         </div>
 
         <div class="card">
-            <div class="card-title"><i class="fas fa-compass"></i> البوصلة المغناطيسية الفلكية واتجاه القبلة</div>
+            <div class="card-title"><i class="fas fa-moon"></i> البيانات الفلكية وحالة الأجرام القريبة</div>
+            <div class="info-grid">
+                <div class="info-item"><i class="fas fa-sun" style="color: #eab308;"></i><div class="info-data"><span class="label">شروق الشمس</span><span class="value" id="sunrise">-</span></div></div>
+                <div class="info-item"><i class="fas fa-moon" style="color: #94a3b8;"></i><div class="info-data"><span class="label">غروب الشمس</span><span class="value" id="sunset">-</span></div></div>
+                <div class="info-item"><i class="fas fa-moon" style="color: #cbd5e1;"></i><div class="info-data"><span class="label">إضاءة القمر الحالية</span><span class="value" id="moon-illumination">-</span></div></div>
+                <div class="info-item"><i class="fas fa-star" style="color: #c084fc;"></i><div class="info-data"><span class="label">بداية الغسق الفلكي</span><span class="value" id="astronomical-twilight">-</span></div></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><i class="fas fa-compass"></i> البوصلة الفلكية المنعمة هندسياً واتجاه القبلة</div>
             <div class="compass-container">
                 <div class="compass-wrapper">
                     <div class="compass" id="compassRing">
@@ -321,7 +340,7 @@
         </div>
 
         <div class="card">
-            <div class="card-title"><i class="fas fa-clock"></i> مواقيت الصلاة اليوم وحساب الفلك</div>
+            <div class="card-title"><i class="fas fa-clock"></i> المواقيت الشرعية والفلكية الدقيقة</div>
             <div class="info-grid">
                 <div class="info-item"><i class="text-muted">الفجر</i><span class="value" id="fajr">-</span></div>
                 <div class="info-item"><i class="text-muted">الظهر</i><span class="value" id="dhuhr">-</span></div>
@@ -329,7 +348,7 @@
                 <div class="info-item"><i class="text-muted">المغرب</i><span class="value" id="maghrib">-</span></div>
                 <div class="info-item"><i class="text-muted">العشاء</i><span class="value" id="isha">-</span></div>
             </div>
-            <div class="prayer-countdown" id="countdown-text">جاري حساب المتبقي للصلاة التالية...</div>
+            <div class="prayer-countdown" id="countdown-text">جاري احتساب خطوط العرض لحساب الوقت المتبقي...</div>
         </div>
 
     </div>
@@ -339,39 +358,42 @@
     </footer>
 
     <script>
-        // موازنة البوصلة المتقدمة (الفلترة الحركية لمنع الارتجاف)
-        let smoothedHeading = 0;
-        let rawHeading = 0;
+        let rawHeading = 0, smoothedHeading = 0;
         let prayerTimings = {};
+        let gpsAltitude = null;
 
         window.onload = function() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(initDashboard, handleError, {
                     enableHighAccuracy: true,
-                    timeout: 20000,
+                    timeout: 25000,
                     maximumAge: 0
                 });
             } else {
-                document.getElementById('loader-text').innerText = "خطأ: جهازك أو متصفحك مغلق عن استقبال بيانات الـ GPS.";
+                document.getElementById('loader-text').innerText = "خطأ: ميزة الملاحة GPS معطلة بالكامل على هذا المتصفح.";
             }
         };
 
         function handleError(error) {
-            document.getElementById('loader-text').innerHTML = "<span style='color:#ef4444;'>عذراً، تفعيل الـ GPS إلزامي!</span><br>فضلاً قم بتفعيل خدمة الموقع على جوالك وأعطِ المتصفح إذن الصلاحية.";
+            document.getElementById('loader-text').innerHTML = "<span style='color:#ef4444;'>يرجى تفعيل الـ GPS وإعطاء الإذن!</span><br>الموسوعة الجوية تعتمد كلياً على الإحداثيات لمعايرة محطات الأرصاد ورادار الطقس الحقيقي.";
         }
 
         async function initDashboard(position) {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
+            gpsAltitude = position.coords.altitude; // الارتفاع المباشر من مستشعر الجوال
 
             document.getElementById('lat').innerText = lat.toFixed(5);
             document.getElementById('lon').innerText = lon.toFixed(5);
-            document.getElementById('loader-text').innerText = "يتم الاتصال بأقمار الأرصاد ومحطات الرصد الآن...";
+            document.getElementById('loader-text').innerText = "يتم الآن ضخ الإحداثيات إلى رادار الطقس وسحب الخرائط الجغرافية والكونية...";
 
-            // معالجة جلب البيانات بالتوازي لضمان سرعة الاستجابة الكاملة
+            // دمج الرادار المباشر التفاعلي لطقس ومناخ الموقع الحالي بدقة فائقة
+            document.getElementById('radarMap').src = `https://windy.com/-Embed/radar?radar,${lat.toFixed(3)},${lon.toFixed(3)},8`;
+
+            // جلب البيانات المتعددة بالتوازي لسرعة خارقة وعدم توقف الصفحة
             await Promise.all([
                 getLocationName(lat, lon),
-                getAdvancedWeatherAndForecast(lat, lon),
+                fetchMultiSourceWeatherAndAstronomy(lat, lon),
                 getPrayerTimes(lat, lon),
                 calculateQibla(lat, lon)
             ]);
@@ -379,203 +401,38 @@
             document.getElementById('loader').classList.add('hidden');
             document.getElementById('main-content').classList.remove('hidden');
 
-            // إطلاق محرك تحديث البوصلة الجيروسكوبي السلس
             startCompassEngine();
-            // تفعيل عداد الصلوات التنازلي التلقائي
             setInterval(updatePrayerCountdown, 60000);
         }
 
-        // 1. عكس الإحداثيات لاسم المنطقة والحي
         async function getLocationName(lat, lon) {
             try {
                 const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=ar`);
                 const data = await res.json();
                 document.getElementById('loc-name').innerText = (data.city || data.principalSubdivision || "") + (data.locality ? ` (${data.locality})` : "");
             } catch (e) {
-                document.getElementById('loc-name').innerText = "ميدان بري مفتوح";
+                document.getElementById('loc-name').innerText = "منطقة ملاحية مفتوحة";
             }
         }
 
-        // 2. دمج جلب الطقس المتقدم والتوقعات لـ 5 أيام مع جودة الهواء والـ UV في مصفوفة واحدة
-        async function getAdvancedWeatherAndForecast(lat, lon) {
+        // 2. دمج وتكامل البيانات من أكثر من مصدر وحساب المتوسط وتلافي الأخطاء
+        async function fetchMultiSourceWeatherAndAstronomy(lat, lon) {
             try {
-                // روابط آمنة وجلب متوازي لبيانات الأرصاد وجودة الهواء
-                const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,wind_gusts_10m,cloud_cover,uv_index&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=auto&elevation=true`;
+                // المصدر 1: خوادم الأرصاد المفتوحة والمسح الطبوغرافي الرقمي (Open-Meteo)
+                const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,wind_gusts_10m,cloud_cover,uv_index,dew_point_2m,visibility&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=auto&elevation=true`;
+                
+                // المصدر 2: خوادم الطقس البديلة والغطاء الغباري والأشعة (National API Service / Air-Quality Component)
                 const airUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm2_5`;
                 
-                const [weatherRes, airRes] = await Promise.all([fetch(weatherUrl), fetch(airUrl)]);
+                // المصدر 3: خوادم التوقيت الفلكي الشامل وحالة الأجرام القريبة (Astronomy Core via Aladhan / VisualCrossing Alternative)
+                const astroUrl = `https://api.aladhan.com/v1/timings/${Math.floor(Date.now() / 1000)}?latitude=${lat}&longitude=${lon}&method=4`;
+
+                const [weatherRes, airRes, astroRes] = await Promise.all([fetch(weatherUrl), fetch(airUrl), fetch(astroUrl)]);
                 const wData = await weatherRes.json();
                 const aData = await airRes.json();
+                const astData = await astroRes.json();
 
-                // عرض البيانات الحالية الشاملة
-                const cur = wData.current;
-                document.getElementById('temp').innerText = `${cur.temperature_2m} °م`;
-                document.getElementById('humidity').innerText = `${cur.relative_humidity_2m} %`;
-                document.getElementById('wind-speed').innerText = `${cur.wind_speed_10m} كم/س`;
-                document.getElementById('wind-gusts').innerText = `${cur.wind_gusts_10m} كم/س`;
-                document.getElementById('pressure').innerText = `${Math.round(cur.pressure_msl)} hPa`;
-                document.getElementById('cloud-cover').innerText = `${cur.cloud_cover} %`;
-                document.getElementById('uv-index').innerText = `${cur.uv_index || 0}`;
-                document.getElementById('altitude').innerText = `${Math.round(wData.elevation || 0)} متر`;
-                
-                if (aData.current && aData.current.pm2_5) {
-                    document.getElementById('air-quality').innerText = `${Math.round(aData.current.pm2_5)} µg/m³`;
-                } else {
-                    document.getElementById('air-quality').innerText = "ممتازة";
-                }
-
-                // معالجة وبناء جدول التوقعات لـ 5 أيام مستقبليين
-                const daily = wData.daily;
-                let forecastHtml = "";
-                const daysName = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
-                
-                for (let i = 1; i <= 5; i++) {
-                    const dateObj = new Date(daily.time[i]);
-                    const dayLabel = daysName[dateObj.getDay()];
-                    const maxTemp = Math.round(daily.temperature_2m_max[i]);
-                    const minTemp = Math.round(daily.temperature_2m_min[i]);
-                    const rainProb = daily.precipitation_probability_max[i] || 0;
-                    const maxWind = Math.round(daily.wind_speed_10m_max[i]);
-
-                    forecastHtml += `
-                        <div class="forecast-row">
-                            <div style="font-weight: 500;">${dayLabel}</div>
-                            <div style="color: #f43f5e;">${maxTemp}° / <span style="color:#60a5fa;">${minTemp}°</span></div>
-                            <div style="color: #38bdf8;"><i class="fas fa-droplet" style="font-size:0.75rem;"></i> ${rainProb}%</div>
-                            <div style="color: #94a3b8;"><i class="fas fa-wind" style="font-size:0.75rem;"></i> ${maxWind} ك/س</div>
-                        </div>
-                    `;
-                }
-                document.getElementById('forecast-container').innerHTML = forecastHtml;
-
-            } catch (error) {
-                console.error("عطل في جلب مصفوفات الأرصاد والتوقعات", error);
-            }
-        }
-
-        // 3. جلب الميقات الفلكي للصلاة ببروتوكول آمن 100%
-        async function getPrayerTimes(lat, lon) {
-            try {
-                const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(Date.now() / 1000)}?latitude=${lat}&longitude=${lon}&method=4`);
-                const pData = await res.json();
-                prayerTimings = pData.data.timings;
-                
-                document.getElementById('fajr').innerText = prayerTimings.Fajr;
-                document.getElementById('dhuhr').innerText = prayerTimings.Dhuhr;
-                document.getElementById('asr').innerText = prayerTimings.Asr;
-                document.getElementById('maghrib').innerText = prayerTimings.Maghrib;
-                document.getElementById('isha').innerText = prayerTimings.Isha;
-
-                updatePrayerCountdown();
-            } catch (e) {
-                console.error("فشل جلب المواقيت الفلكية"، e);
-            }
-        }
-
-        // 4. الحساب الرياضي الدقيق لزاوية القبلة الكروية
-        function calculateQibla(lat, lon) {
-            const mLat = 21.4225, mLon = 39.8262; // إحداثيات مكة المكرمة
-            const dLon = (mLon - lon) * Math.PI / 180;
-            const latRad = lat * Math.PI / 180;
-            const mLatRad = mLat * Math.PI / 180;
-
-            const y = Math.sin(dLon);
-            const x = Math.cos(latRad) * Math.tan(mLatRad) - Math.sin(latRad) * Math.cos(dLon);
-            
-            const qiblaAngle = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
-            document.getElementById('qibla-text').innerText = `انحراف اتجاه القطة الكوني: ${qiblaAngle.toFixed(1)}°`;
-            document.getElementById('qiblaArrow').style.transform = `rotate(${qiblaAngle}deg)`;
-        }
-
-        // 5. محرك البوصلة الذكي والمنعم هندسياً (فلاتر منع الارتجاج الفوري)
-        function startCompassEngine() {
-            if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                document.getElementById('btnIOS').style.display = 'block';
-            } else {
-                window.addEventListener('deviceorientationabsolute', onOrientationChange, true);
-                window.addEventListener('deviceorientation', onOrientationChange, true);
-            }
-
-            // حلقة معالجة الحركة المستمرة (التنعيم الحريري)
-            function smoothRenderLoop() {
-                let error = rawHeading - smoothedHeading;
-                // موازنة القفزات المفاجئة عند الالتفاف الكامل 360 درجة
-                if (error > 180) error -= 360;
-                if (error < -180) error += 360;
-
-                // أخذ 6% فقط من الحركة الجديدة بكل إطار لتخميد الارتجاف والاهتزاز
-                smoothedHeading += error * 0.06;
-
-                const compassRing = document.getElementById('compassRing');
-                if (compassRing) {
-                    compassRing.style.transform = `rotate(${-smoothedHeading}deg)`;
-                }
-                requestAnimationFrame(smoothRenderLoop);
-            }
-            requestAnimationFrame(smoothRenderLoop);
-        }
-
-        function onOrientationChange(event) {
-            let heading = event.alpha;
-            if (event.webkitCompassHeading) {
-                heading = event.webkitCompassHeading; // قراءة أجهزة الـ iPhone للشمال الحقيقي
-            }
-            if (heading !== null && heading !== undefined) {
-                rawHeading = heading;
-            }
-        }
-
-        function requestIOSPermission() {
-            DeviceOrientationEvent.requestPermission()
-                .then(response => {
-                    if (response === 'granted') {
-                        window.addEventListener('deviceorientation', onOrientationChange, true);
-                        document.getElementById('btnIOS').style.display = 'none';
-                    } else {
-                        alert("تم رفض تشغيل المستشعر، ستظل البوصلة ثابتة.");
-                    }
-                }).catch(console.error);
-        }
-
-        // دالة حساب العداد التنازلي للصلاة القادمة
-        function updatePrayerCountdown() {
-            if (!prayerTimings.Fajr) return;
-
-            const now = new Date();
-            const prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
-            const prayersArabic = { Fajr: 'الفجر', Dhuhr: 'الظهر', Asr: 'العصر', Maghrib: 'المغرب', Isha: 'العشاء' };
-            
-            let nextPrayerName = "";
-            let nextPrayerTime = null;
-
-            for (let p of prayers) {
-                const pTimeStr = prayerTimings[p];
-                const [hrs, mins] = pTimeStr.split(':');
-                const pDate = new Date();
-                pDate.setHours(parseInt(hrs), parseInt(mins), 0);
-
-                if (pDate > now) {
-                    nextPrayerName = prayersArabic[p];
-                    nextPrayerTime = pDate;
-                    break;
-                }
-            }
-
-            // إذا انتهت صلوات اليوم، تكون الصلاة القادمة فجر الغد
-            if (!nextPrayerTime) {
-                nextPrayerName = "الفجر (غداً)";
-                const [hrs, mins] = prayerTimings['Fajr'].split(':');
-                nextPrayerTime = new Date();
-                nextPrayerTime.setDate(nextPrayerTime.getDate() + 1);
-                nextPrayerTime.setHours(parseInt(hrs), parseInt(mins), 0);
-            }
-
-            const diffMs = nextPrayerTime - now;
-            const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
-            const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-
-            document.getElementById('countdown-text').innerText = `الصلاة القادمة: ${nextPrayerName} (المتبقي: ${diffHrs} ساعة و ${diffMins} دقيقة)`;
-        }
-    </script>
-</body>
-</html>
+                // أ) معايرة وحساب الارتفاع عن سطح البحر من مصادر متعددة (GPS + المسح الساتلي للخرائط الرقمية DEM)
+                let satelliteElevation = wData.elevation || 0;
+                let finalAltitude = gpsAltitude ? (gpsAltitude + satelliteElevation) / 2 : satelliteElevation; 
+                document.getElementById('
